@@ -11,8 +11,8 @@ import { authRouter } from './routes/authRoute.js';
 connectDB();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-
+const PORT = 5000;
+// process.env.PORT || 
 // Middleware
 app.use(cors({credentials: true}));
 app.use(cookieparser());
@@ -23,6 +23,7 @@ app.get('/', (req, res) => {
   res.send('Hello from the MERN Auto server!');
 });
 app.use('/api/auth', authRouter);
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });``
