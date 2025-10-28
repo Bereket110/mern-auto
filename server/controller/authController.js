@@ -116,7 +116,7 @@ export const logout=async(req,res)=>{
 
 export const verifyOtp=async (req,res)=>{
     const {email,userId}=req.body;
-
+    console.log(userId);
     if(!userId){
         return res.json({success:false,message:"User id is required"});
 
@@ -130,7 +130,7 @@ export const verifyOtp=async (req,res)=>{
 
        const otp= Math.floor(Math.random()*900000+100000);
        user.verifyOtp=otp;
-       user.verifyOtpExpiryAt=Date.now()+10*60*1000; //10 minutes
+       user.verifyOtpExpiryAt=Date.now()+10*60*1000; 
        await user.save();
 
        const maileOptions={
@@ -143,6 +143,73 @@ export const verifyOtp=async (req,res)=>{
         await transporter.sendMail(maileOptions);
         return res.json({success:true,message:"OTP sent to email"});
 
+    } catch (error) {
+        return res.json({success:false,message:error.message});
+    }
+}
+
+export const verifyEmail=async(req,res)=>{
+    const {otp,userId}=req.body;
+
+    if(!userId || !otp){
+        return res.json({success:false,message:"User id and otp are required"});
+    }
+    try {
+        
+        const user=await userModel.findById(userId);
+        if(!user){
+            return res.json({success:false,message:"User not found"});
+        }
+        console.log("User's stored OTP:", user.verifyOtp);
+        console.log("Provided OTP:", otp);
+        if(user.verifyOtp!==otp){
+            return res.json({success:false,message:"Invalid"});
+        }
+
+        if(user.verifyOtpExpiryAt<Date.now()){
+            return res.json({success:false,message:"OTP expired"});
+        }
+
+        if(user.isAccountVerified){
+            return res.json({success:true,message:"Email already verified"});
+        }
+        user.isAccountVerified=true;
+        user.verifyOtp=null;
+        user.verifyOtpExpiryAt=null;
+        await user.save();
+
+        const mailOptions={
+            from:process.env.SENDER_EMAIL,
+            to:user.email,
+            subject:"Email Verified - Bereket's portfolio",
+            text:`Hello ${user.name},\n\nYour email has been successfully verified. Thank you for completing the verification process!\n\nBest regards,\nBereket Yakob`
+        }
+        await transporter.sendMail(mailOptions);
+        return res.json({success:true,message:"Email verified successfully"});
+
+    } catch (error) {
+        return res.json({success:false,message:error.message});
+    }
+}
+
+export const resetOtp=async(req,res)=>{
+    const {userId}=req.body;
+
+    if(!userId){
+        return res.json({success:false,message:"User id is required"});
+    }
+
+    try {
+        const user=await userModel.findById(userId);
+        if(!user){
+            return res.json({success:false,message:"User not found"});
+        }
+        user.verifyOtp=null;
+        user.verifyOtpExpiryAt=null;
+        await user.save();
+
+        console.log("Decoded user ID:", req.userId);
+        return res.json({success:true,message:"OTP reset successful"});
     } catch (error) {
         return res.json({success:false,message:error.message});
     }
