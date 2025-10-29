@@ -1,12 +1,23 @@
-import express from 'express';
-import { login, logout, register, resetOtp, verifyEmail, verifyOtp } from '../controller/authController.js';
-import decodeToken from '../middleware/userAuth.js';
+import express from "express";
+import {
+  isAuthenticated,
+  login,
+  logout,
+  register,
+  resetPassword,
+  sendResetOtp,
+  sendVerifyOtp,
+  verifyEmail,
+} from "../controller/authController.js";
+import userAuth from "../middleware/userAuth.js";
 
-export const authRouter=express.Router();
+export const authRouter = express.Router();
 
-authRouter.post('/register',register);
-authRouter.post('/login',login);
-authRouter.post('/logout',logout);
-authRouter.post('/verify-otp',decodeToken,verifyOtp);
-authRouter.post('/verify-email',decodeToken,verifyEmail);
-authRouter.post('/reset-otp',decodeToken,resetOtp);
+authRouter.post("/register", register);
+authRouter.post("/login", login);
+authRouter.post("/logout", logout);
+authRouter.post("/send-verify-otp", userAuth, sendVerifyOtp);
+authRouter.post("/verify-account", userAuth, verifyEmail);
+authRouter.post("/is-auth", userAuth, isAuthenticated);
+authRouter.post("/send-reset-otp", sendResetOtp);
+authRouter.post("/reset-password", resetPassword);
