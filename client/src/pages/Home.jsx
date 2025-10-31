@@ -1,7 +1,15 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import Header from "../components/Header";
 
 const Home = () => {
-  return <div>Home Page</div>;
+  return (
+    <>
+      <Navbar />
+      <Header />
+    </>
+  );
 };
 
 export default Home;
