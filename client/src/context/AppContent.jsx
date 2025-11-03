@@ -11,6 +11,7 @@ export const AppContextProvider = (props) => {
   const [userData, setUserData] = useState(false);
 
   const [userName, setUserName] = useState("");
+
   const getUserData = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/user/data`, {
@@ -19,13 +20,26 @@ export const AppContextProvider = (props) => {
       console.log(data);
       if (data.success) {
         setUserData(true);
-        setUserName(data.userData.name);
+        setUserName(data.userData);
         console.log(data.userData.name);
       }
     } catch (error) {
       console.log(error.message);
     }
   };
+
+  const getUserAuthentication = async () => {
+    try {
+      const { data } = await axios.get(`${backendUrl}/api/auth/is-auth`, {});
+
+      if (data.success) {
+        setIsLoggedin(true);
+      }
+    } catch (error) {
+      alert(data.message);
+    }
+  };
+
   const value = {
     backendUrl,
     isLoggedin,
