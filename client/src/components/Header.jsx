@@ -5,16 +5,24 @@ import { AppContent } from "../context/AppContent";
 const Header = () => {
   const { isLoggedin, userData, userName } = useContext(AppContent);
   return (
-    <div>
-      <img src={assets.header_img} alt="" />
-      <h1>Hey {isLoggedin ? `${userName.name}` : "Developer"} </h1>
-      <img src={assets.hand_wave} alt="" />
-      <h2>Welcome to our app</h2>
-      <p>
+    <div className="flex flex-col items-center mt-20 px-4 text-center text-gray-800">
+      <img
+        src={assets.header_img}
+        alt=""
+        className="w-36 h-36 rounded-full mb-6"
+      />
+      <h1 className="flex items-center gap-2 text-xl sm:text-3xl font-medium mb-2">
+        Hey {isLoggedin ? `${userName.name}` : "Family"}
+        <img src={assets.hand_wave} alt="" className="w-8 aspect-square" />{" "}
+      </h1>
+      <h2 className="text-3xl sm:text-5xl mb-4">Welcome to my app</h2>
+      <p className="mb-8 max-w-md">
         Let's start with a quick product tour and we will have you up and
         running in no time!
       </p>
-      <button>Get Started</button>
+      <button className="border border-gray-500 rounded-full py-2.5 px-8 hover:bg-gray-100 transition-all">
+        Get Started
+      </button>
     </div>
   );
 };

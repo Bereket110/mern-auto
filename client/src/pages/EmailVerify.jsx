@@ -3,6 +3,7 @@ import { assets } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AppContent } from "../context/AppContent";
+import { toast } from "react-toastify";
 const EmailVerify = () => {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
@@ -10,14 +11,21 @@ const EmailVerify = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const { data } = await axios.post(`${backendUrl}/api/auth/send-reset-otp`, {
-      email,
-    });
-    if (data?.success) {
-      alert(data.message);
-      navigate("/reset-password");
-    } else {
-      alert(data.message);
+    try {
+      const { data } = await axios.post(
+        `${backendUrl}/api/auth/send-reset-otp`,
+        {
+          email,
+        }
+      );
+      if (data?.success) {
+        toast.success(data.message);
+        navigate("/reset-password");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
     }
   };
   return (

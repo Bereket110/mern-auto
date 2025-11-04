@@ -6,9 +6,12 @@ import ResetPassword from "./pages/ResetPassword";
 import EmailVerify from "./pages/EmailVerify";
 import AccountVerification from "./pages/AccountVerification";
 
+import { ToastContainer } from "react-toastify";
+
 function App() {
   return (
     <div>
+      <ToastContainer />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />

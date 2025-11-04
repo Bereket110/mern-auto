@@ -5,10 +5,10 @@ import Header from "../components/Header";
 
 const Home = () => {
   return (
-    <>
+    <div className="flex flex-col item-center max-h-screen bg-[url('/bg_img.png')] bg-cover bg-center">
       <Navbar />
       <Header />
-    </>
+    </div>
   );
 };
 

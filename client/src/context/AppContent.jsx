@@ -46,6 +46,7 @@ export const AppContextProvider = (props) => {
     setIsLoggedin,
     getUserData,
     userName,
+    setUserName,
   };
   return (
     <AppContent.Provider value={value}>{props.children}</AppContent.Provider>
