@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5000;
 // process.env.PORT ||
 // Middleware
 
-const allowedOrigins = ["http://localhost:5173"];
+const allowedOrigins = ["https://mern-auth-frontend-lait.onrender.com/"];
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 app.use(cookieparser());
