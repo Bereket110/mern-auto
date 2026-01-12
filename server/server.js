@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5000;
 // process.env.PORT ||
 // Middleware
 
-const allowedOrigins = ["http://localhost:5173"];
+const allowedOrigins = ["https://mern-auto-szs2.vercel.app"];
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 app.use(cookieparser());
