@@ -9,14 +9,14 @@ import { authRouter } from "./routes/authRoute.js";
 import userRouter from "./routes/userRoute.js";
 
 // Connect to MongoDB
-connectDB();
+await connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 // process.env.PORT ||
 // Middleware
 
-const allowedOrigins = ["https://mern-auth-frontend-lait.onrender.com"];
+const allowedOrigins = ["http://localhost:5173"];
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 app.use(cookieparser());

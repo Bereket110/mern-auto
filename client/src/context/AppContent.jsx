@@ -1,10 +1,10 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 import axios from "axios";
 export const AppContent = createContext();
 
 export const AppContextProvider = (props) => {
-  const backendUrl = "https://mern-auth-backend-6fp8.onrender.com";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const [isLoggedin, setIsLoggedin] = useState(false);
 
@@ -12,16 +12,22 @@ export const AppContextProvider = (props) => {
 
   const [userName, setUserName] = useState("");
 
+  const [token, setToken] = useState(null);
+
   const getUserData = async () => {
     try {
-      const { data } = await axios.get(`${backendUrl}/api/user/data`, {
-        withCredentials: true,
-      });
-      console.log(data);
+      // const token = localStorage.getItem("token");
+
+      // if (token) {
+      //   setToken(token);
+      //   axios.defaults.headers.common["Authorization"] = `${token}`;
+      // }
+      const { data } = await axios.get(`${backendUrl}/api/user/data`);
+      // console.log(data);
       if (data.success) {
         setUserData(true);
         setUserName(data.userData);
-        console.log(data.userData.name);
+        // console.log(data.userData.name);
       }
     } catch (error) {
       console.log(error.message);
@@ -30,7 +36,7 @@ export const AppContextProvider = (props) => {
 
   const getUserAuthentication = async () => {
     try {
-      const { data } = await axios.get(`${backendUrl}/api/auth/is-auth`, {});
+      const { data } = await axios.get(`${backendUrl}/api/auth/is-auth`);
 
       if (data.success) {
         setIsLoggedin(true);
@@ -40,6 +46,16 @@ export const AppContextProvider = (props) => {
     }
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      setToken(token);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+    getUserData();
+  }, []);
+
   const value = {
     backendUrl,
     isLoggedin,
@@ -47,6 +63,9 @@ export const AppContextProvider = (props) => {
     getUserData,
     userName,
     setUserName,
+    token,
+    setToken,
+    axios,
   };
   return (
     <AppContent.Provider value={value}>{props.children}</AppContent.Provider>

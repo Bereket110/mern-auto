@@ -48,7 +48,7 @@ const AccountVerification = () => {
         }
       );
 
-      console.log(data);
+      // console.log(data);
       if (data.success) {
         toast.success(data.message);
         navigate("/");

@@ -15,6 +15,8 @@ const Navbar = () => {
     userData,
     getUserData,
     setUserData,
+    token,
+    setToken,
   } = useContext(AppContent);
   const navigate = useNavigate();
 
@@ -26,6 +28,9 @@ const Navbar = () => {
       const { data } = await axios.post(`${backendUrl}/api/auth/logout`);
       if (data.success) {
         setIsLoggedin(false);
+        localStorage.removeItem("token");
+        axios.defaults.headers.common["Authorization"] = null;
+        setToken(null);
         setUserName("");
         toast.success(data.message);
         navigate("/");
@@ -39,7 +44,7 @@ const Navbar = () => {
   const AccoutnverifyHandler = async () => {
     axios.defaults.withCredentials = true;
     const { data } = await axios.post(`${backendUrl}/api/auth/send-verify-otp`);
-    console.log(data);
+    // console.log(data);
     if (data.success) {
       alert(data.message);
       getUserData();
@@ -48,12 +53,12 @@ const Navbar = () => {
       alert(data.message);
     }
   };
-  console.log("User data" + userName.isAccountVerified);
-  console.log("User data" + userName);
+  // console.log("User data" + userName.isAccountVerified);
+  // console.log("User data" + userName);
   return (
     <div className="w-full flex justify-between items-center p-4 sm:p-6 sm:px-24 absolute top-0">
       <img src={assets.logo} alt="logo" className="w-28 sm:w-32" />
-      {isLoggedin ? (
+      {token ? (
         <div className="w-8 h-8 flex justify-center items-center rounded-full bg-black text-white relative group">
           {userName?.name?.slice(0, 1).toUpperCase() || "U"}
           <div className="absolute hidden group-hover:block top-0 right-0 z-10 text-black rounded pt-10">

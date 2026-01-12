@@ -3,7 +3,9 @@ import { assets } from "../assets/assets";
 import { AppContent } from "../context/AppContent";
 
 const Header = () => {
-  const { isLoggedin, userData, userName } = useContext(AppContent);
+  const { isLoggedin, userData, token, userName, getUserData } =
+    useContext(AppContent);
+
   return (
     <div className="flex flex-col items-center mt-20 px-4 text-center text-gray-800">
       <img
@@ -12,7 +14,7 @@ const Header = () => {
         className="w-36 h-36 rounded-full mb-6"
       />
       <h1 className="flex items-center gap-2 text-xl sm:text-3xl font-medium mb-2">
-        Hey {isLoggedin ? `${userName.name}` : "Family"}
+        Hey {token ? `${userName.name}` : "Family"}
         <img src={assets.hand_wave} alt="" className="w-8 aspect-square" />{" "}
       </h1>
       <h2 className="text-3xl sm:text-5xl mb-4">Welcome to my app</h2>

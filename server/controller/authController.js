@@ -24,16 +24,15 @@ export const register = async (req, res) => {
     });
     await user.save();
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    //   sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+    //   maxAge: 7 * 24 * 60 * 60 * 1000,
+    // });
+
     //Sending welcome email to user
 
     const mailOptions = {
@@ -45,7 +44,8 @@ export const register = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.json({ success: true, message: "User registered successfully" });
+    return res.json({ success: true, token: token });
+    //  message: "User registered successfully"
   } catch (error) {
     res.json({ success: false, message: error.message });
   }
@@ -71,16 +71,14 @@ export const login = async (req, res) => {
     if (!isMatch) {
       return res.json({ success: false, message: "Invalid password" });
     }
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    //   sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+    //   maxAge: 7 * 24 * 60 * 60 * 1000,
+    // });
 
     const mailOptions = {
       from: process.env.SENDER_EMAIL,
@@ -91,7 +89,12 @@ export const login = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    return res.json({ success: true, message: "Login successful" });
+    return res.json({
+      success: true,
+      message: "Login successful",
+      token: token,
+    });
+    //
   } catch (error) {
     res.json({ success: false, message: error.message });
   }
@@ -122,7 +125,7 @@ export const logout = async (req, res) => {
 export const sendVerifyOtp = async (req, res) => {
   const userId = req.userId;
 
-  console.log(userId);
+  // console.log(userId);
   if (!userId) {
     return res.json({ success: false, message: "User id is required" });
   }
@@ -173,8 +176,8 @@ export const verifyEmail = async (req, res) => {
     if (!user) {
       return res.json({ success: false, message: "User not found" });
     }
-    console.log("User's stored OTP:", user.verifyOtp);
-    console.log("Provided OTP:", otp);
+    // console.log("User's stored OTP:", user.verifyOtp);
+    // console.log("Provided OTP:", otp);
     if (user.verifyOtp !== otp) {
       return res.json({ success: false, message: "Invalid" });
     }
